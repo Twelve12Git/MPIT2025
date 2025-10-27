@@ -1,0 +1,244 @@
+// Основные функции: динамический конструктор параметров, отображение исполнителей,
+// дашборд с метриками, синхронизация и распределение заявок.
+
+import '../styles/style.css';
+import React, { useEffect } from 'react';
+
+// Утилиты, эмуляция внешней АИС (замена настоящей интеграции в демо)
+const fetchExecutorsCache = () =>
+    Promise.resolve([
+        { id: 1, name: 'Иванов', active: true, currentLoad: 3, dailyLimit: 10, weight: 2 },
+        { id: 2, name: 'Петров', active: true, currentLoad: 1, dailyLimit: 8, weight: 1 },
+        { id: 3, name: 'Сидоров', active: false, currentLoad: 0, dailyLimit: 5, weight: 3 },
+    ]);
+const fetchApplicationsCache = () =>
+    Promise.resolve([
+        { id: 101, params: { complexity: 'high', area: 'support' }, weight: 3, status: 'new' },
+        { id: 102, params: { complexity: 'medium', area: 'sales' }, weight: 2, status: 'new' },
+    ]);
+
+interface ParameterConstructorProps {
+    parameters: string[];
+    onAdd: () => void;
+    onUpdate: (index: number, value: string) => void;
+}
+
+// Компонент конструктора параметров и условий (только имена параметров)
+const ParameterConstructor: React.FC<ParameterConstructorProps> = ({ parameters, onAdd, onUpdate }) => {
+    return (
+        <section style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+            <h3>Конструктор параметров</h3>
+            {parameters.map((param, idx) => (
+                <input
+                    key={idx}
+                    type="text"
+                    value={param}
+                    onChange={e => onUpdate(idx, e.target.value)}
+                    placeholder="Имя параметра"
+                    style={{ margin: '5px' }}
+                />
+            ))}
+            <button onClick={onAdd} style={{ marginTop: '10px' }}>
+                Добавить параметр
+            </button>
+        </section>
+    );
+};
+
+interface Executor {
+    id: number;
+    name: string;
+    active: boolean;
+    currentLoad: number;
+    dailyLimit: number;
+    weight: number;
+}
+
+interface ExecutorsListProps {
+    executors: Executor[];
+}
+
+// Список активных исполнителей с текущей загрузкой и лимитами
+const ExecutorsList: React.FC<ExecutorsListProps> = ({ executors }) => {
+    return (
+        <section style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+            <h3>Активные исполнители</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Активен</th>
+                        <th>Текущая нагрузка</th>
+                        <th>Дневной лимит</th>
+                        <th>Вес</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {executors.map((exec: Executor) => (
+                        <tr key={exec.id} style={{ backgroundColor: exec.active ? 'white' : '#eee' }}>
+                            <td>{exec.name}</td>
+                            <td>{exec.active ? 'Да' : 'Нет'}</td>
+                            <td>{exec.currentLoad}</td>
+                            <td>{exec.dailyLimit}</td>
+                            <td>{exec.weight}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </section>
+    );
+};
+
+interface Application {
+    id: number;
+    params: { [key: string]: any };
+    weight: number;
+    status: string;
+    executor?: string;
+}
+
+interface DashboardProps {
+    applications: Application[];
+    executors: Executor[];
+}
+
+// Дашборд с базовыми метриками заявок и исполнителей (поменять на графики)
+const Dashboard: React.FC<DashboardProps> = ({ applications, executors }) => {
+    const activeExecutorsCount = executors.filter((e) => e.active).length;
+    const totalApplications = applications.length;
+    const assignedApplications = applications.filter((a) => a.status !== 'new').length;
+
+    return (
+        <section style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+            <h3>Дашборд распределения</h3>
+            <ul>
+                <li>Всего заявок: {totalApplications}</li>
+                <li>Назначенных заявок: {assignedApplications}</li>
+                <li>Активных исполнителей: {activeExecutorsCount}</li>
+            </ul>
+        </section>
+    );
+};
+
+const ZumaniLogo: React.FC = () => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="209"
+            height="78"
+            viewBox="0 0 628 234"
+            fill="none"
+        >
+            <path
+                d="M574.813 105.025C603.77 105.025 627.244 81.5145 627.244 52.5126C627.244 23.5107 603.77 0 574.813 0C545.856 0 522.381 23.5107 522.381 52.5126C522.381 81.5145 545.856 105.025 574.813 105.025Z" fill="#FF5A00"
+            />
+            <path d="M483.553 105.07L525.761 9.40464C519.329 5.05934 512.024 2.18002 504.36 0.969707C496.696 -0.240611 488.861 0.247529 481.406 2.39971C473.951 4.5519 467.058 8.31573 461.213 13.4259C455.368 18.536 450.714 24.868 447.578 31.9755C444.442 39.0829 442.901 46.7929 443.063 54.5616C443.226 62.3304 445.088 69.9689 448.518 76.9387C451.948 83.9084 456.864 90.0397 462.917 94.9002C468.97 99.7608 476.014 103.232 483.553 105.07Z" fill="#2ED0FF"></path>
+
+            <path d="M405.011 104.893L450.291 0.834664C447.92 0.513282 445.531 0.351792 443.139 0.351285C430.997 0.318884 419.14 4.02981 409.177 10.9801C399.214 17.9305 391.628 27.7834 387.45 39.201C383.271 50.6185 382.702 63.0475 385.82 74.8C388.939 86.5525 395.593 97.0592 404.879 104.893H405.011Z" fill="#145FF5"></path>
+
+            <path d="M243.204 123.264C265.756 123.264 289.229 136.227 289.186 171.733V233.781H267.643V165.933C267.06 159.749 264.157 154.017 259.519 149.895C254.88 145.772 248.852 143.566 242.652 143.723C236.453 143.879 230.544 146.386 226.118 150.736C221.692 155.087 219.08 160.958 218.809 167.163V233.781H197.266V170.151C196.871 137.897 220.696 123.264 243.204 123.264ZM341.664 123.264C364.172 123.264 387.69 136.227 387.646 171.733V233.781H366.147V229.123C363.306 231.659 359.717 233.202 355.924 233.518H328.194C319.393 233.201 311.058 229.477 304.943 223.129C298.829 216.781 295.412 208.304 295.412 199.483C295.412 190.663 298.829 182.187 304.943 175.839C311.058 169.491 319.393 165.766 328.194 165.449L366.06 165.757V164.614C365.311 159.003 362.653 153.822 358.535 149.944C354.417 146.067 349.091 143.73 343.453 143.327C337.815 142.925 332.211 144.481 327.585 147.734C322.959 150.988 319.595 155.739 318.06 161.187H296.341C300.07 135.172 321.35 123.264 341.664 123.264ZM440.912 123.263C447.498 123.063 454.048 124.301 460.108 126.889C466.169 129.476 471.596 133.352 476.013 138.248C480.485 133.422 485.922 129.594 491.97 127.012C498.017 124.43 504.54 123.152 511.113 123.263C533.622 123.263 557.227 136.227 557.227 171.733V233.781H535.465V165.933C535.09 159.597 532.271 153.654 527.604 149.359C522.938 145.065 516.789 142.754 510.454 142.913C504.119 143.073 498.093 145.691 493.648 150.215C489.204 154.739 486.688 160.816 486.631 167.163V233.781H465.088V165.933C464.197 160.024 461.182 154.644 456.61 150.805C452.039 146.965 446.224 144.929 440.26 145.08C434.295 145.231 428.592 147.559 424.22 151.625C419.848 155.691 417.109 161.217 416.518 167.163V233.781H394.974V170.151C394.579 137.897 418.404 123.263 440.912 123.263ZM585.652 233.781H564.109V123.264H585.652V233.781ZM66.6914 123.304C71.0372 123.305 75.2883 124.579 78.9209 126.968C82.5534 129.357 85.4097 132.757 87.1377 136.751C87.9108 139.121 88.3105 141.597 88.3223 144.09C88.2982 147.296 87.7339 150.475 86.6543 153.493C85.2958 157.153 83.1714 160.479 80.4238 163.249C79.5758 164.14 24.2193 209.522 23.9561 209.785C23.5917 210.012 23.3024 210.342 23.123 210.732C22.9437 211.123 22.8824 211.558 22.9473 211.982C23.1047 212.449 23.4169 212.847 23.832 213.111C24.2472 213.375 24.7401 213.489 25.2285 213.433H91.3936V233.778H22.377C16.4423 233.778 10.7501 231.417 6.55371 227.214C2.35748 223.011 3.59108e-05 217.311 0 211.367C0.0454706 208.628 0.58 205.919 1.5791 203.369C1.74255 202.947 1.93302 202.536 2.14941 202.139C4.01455 197.962 6.82382 194.277 10.3545 191.373L49.0967 159.646C54.1863 155.471 63.7958 147.648 64.3223 147.121C64.6314 146.856 64.8781 146.525 65.0449 146.153C65.2117 145.781 65.2945 145.377 65.2871 144.969C65.1555 144.178 64.5414 143.65 63.0938 143.65H2.63281V123.304H66.6914ZM190.244 186.805C190.639 219.103 166.771 233.693 144.263 233.693C121.754 233.693 98.2803 220.773 98.2803 185.354V123.263H119.911V191.155C120.286 197.491 123.105 203.434 127.771 207.729C132.438 212.023 138.587 214.334 144.922 214.175C151.257 214.015 157.283 211.397 161.728 206.873C166.172 202.349 168.688 196.272 168.745 189.925V123.263L190.244 123.175V186.805ZM330.739 181.752C326.416 181.685 322.208 183.146 318.854 185.879C315.499 188.611 313.214 192.441 312.399 196.693C311.981 199.249 312.121 201.866 312.809 204.362C313.496 206.859 314.716 209.177 316.384 211.156C318.052 213.136 320.128 214.73 322.47 215.829C324.811 216.928 327.363 217.506 329.949 217.522H351.01C355.052 217.534 358.937 215.95 361.82 213.111C364.703 210.273 366.352 206.41 366.41 202.361V181.752H330.739Z" fill="#FF5A00"></path>
+        </svg>
+    );
+};
+
+
+
+// Основной компонент приложения
+const ZumaniOneApp: React.FC = () => {
+    // Параметры исполнитель и заявок, динамически добавляемые
+    const [parameters, setParameters] = React.useState<string[]>(['Опыт', 'Квалификация']);
+    // Кеши эмулирующих данные из внешней АИС
+    const [executors, setExecutors] = React.useState<Executor[]>([]);
+    const [applications, setApplications] = React.useState<Application[]>([]);
+
+    // Загрузка данных при старте и при обновлении кэша - заменить на загрузку из БД
+    useEffect(() => {
+        fetchExecutorsCache().then(setExecutors);
+        fetchApplicationsCache().then(setApplications);
+    }, []);
+
+    // Добавить параметр
+    const addParameter = () => {
+        setParameters([...parameters, '']);
+    };
+    // Обновить параметр
+    const updateParameter = (idx: number, value: string) => {
+        const newParams = [...parameters];
+        newParams[idx] = value;
+        setParameters(newParams);
+    };
+
+    // Имитация назначения исполнителя для заявки 
+    const assignExecutorToApplication = (appId: number) => {
+        // Выбор активного исполнителя с минимальной загрузкой и подходящим лимитом
+        const candidates = executors.filter(e => e.active && e.currentLoad < e.dailyLimit);
+        if (candidates.length === 0) {
+            alert('Нет доступных исполнителей для назначения заявки #' + appId);
+            return;
+        }
+        const chosen = candidates.reduce((prev, curr) =>
+            prev.currentLoad < curr.currentLoad ? prev : curr
+        );
+        // Обновление заявки и исполнителя 
+        setApplications(apps =>
+            apps.map(app => (app.id === appId ? { ...app, status: 'assigned', executor: chosen.name } : app))
+        );
+        setExecutors(exec =>
+            exec.map(e =>
+                e.id === chosen.id ? { ...e, currentLoad: e.currentLoad + 1 } : e
+            )
+        );
+    };
+
+    return (
+        <div style={{ maxWidth: 900, margin: 'auto', fontFamily: 'Arial, sans-serif', padding: 20 }}>
+            <div style={{ marginBottom: 20 }}>
+                <ZumaniLogo />
+            </div>
+            <h1>Zumani One - Система распределения заявок</h1>
+            <ParameterConstructor parameters={parameters} onAdd={addParameter} onUpdate={updateParameter} />
+            <ExecutorsList executors={executors} />
+            <Dashboard applications={applications} executors={executors} />
+
+            <section style={{ border: '1px solid #ccc', padding: '10px' }}>
+                <h3>Заявки</h3>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Параметры</th>
+                            <th>Вес</th>
+                            <th>Статус</th>
+                            <th>Исполнитель</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {applications.map(app => (
+                            <tr key={app.id}>
+                                <td>{app.id}</td>
+                                <td>
+                                    {Object.entries(app.params).map(([k, v]) => (
+                                        <div key={k}><b>{k}:</b> {v}</div>
+                                    ))}
+                                </td>
+                                <td>{app.weight}</td>
+                                <td>{app.status}</td>
+                                <td>{app.executor || '-'}</td>
+                                <td>
+                                    {app.status === 'new' && (
+                                        <button onClick={() => assignExecutorToApplication(app.id)}>
+                                            Назначить исполнителя
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    );
+};
+
+export default ZumaniOneApp;
