@@ -1,13 +1,16 @@
 import './styles/App.css';
 import ZumaniOneApp from './components/ZumaniOneApp';
+import ZunamiApp from './components/ZunamiApp';
 
 
-const App: React.FC = () => {
+
+export default function App() {
   return (
     <div>
-      <ZumaniOneApp />
+      {/* <ZumaniOneApp /> */}
+      <ZunamiApp/>
     </div>
   );
-};
+}
 
-export default App
+

@@ -196,11 +196,11 @@ const ZumaniOneApp: React.FC = () => {
                 <ZumaniLogo />
             </div>
             <h1>Zumani One - Система распределения заявок</h1>
-            <ParameterConstructor parameters={parameters} onAdd={addParameter} onUpdate={updateParameter} />
+            {/* <ParameterConstructor parameters={parameters} onAdd={addParameter} onUpdate={updateParameter} /> */}
             <ExecutorsList executors={executors} />
             <Dashboard applications={applications} executors={executors} />
 
-            <section style={{ border: '1px solid #ccc', padding: '10px' }}>
+            {/* <section style={{ border: '1px solid #ccc', padding: '10px' }}>
                 <h3>Заявки</h3>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
@@ -236,7 +236,7 @@ const ZumaniOneApp: React.FC = () => {
                         ))}
                     </tbody>
                 </table>
-            </section>
+            </section> */}
         </div>
     );
 };
