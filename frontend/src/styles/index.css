@@ -1,0 +1,103 @@
+/* styles.css - базовая цветовая палитра и стили */
+@import './variables.css';
+
+body {
+    font-family: 'Times New Roman';
+    background-color: var(--primary-bgcolor);
+    color: var(--primary-color);
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h3 {
+    color: var(--brand-color);
+}
+
+button {
+    margin-left: 1rem;
+    padding: 1rem 2rem;
+
+    color: var(--primary-bgcolor);
+    background-color: var(--brand-color);
+
+    border: none;
+
+    border-radius: var(--radius-small);
+
+    cursor: pointer;
+
+    font-family: "Golos Text", sans-serif;
+    font-size: 1rem;
+
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--brand-hover-color);
+}
+
+section {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 200px;
+    margin-right: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #007acc;
+    box-shadow: 0 0 5px #a3c6f7;
+}
+
+table {
+    width: 100%;
+
+    border-radius: var(--radius-small);
+}
+
+th,
+td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--primary-bgcolor);
+    text-align: left;
+}
+
+th {
+    background-color: var(--contrast-bgcolor);
+    color: var(--primary-color);
+}
+
+th:first-child {
+    border-top-left-radius: var(--radius-small);
+}
+
+th:last-child {
+    border-top-right-radius: var(--radius-small);
+}
+
+tr:nth-child(even) {
+    background-color: var(--secondary-bgcolor);
+}
+
+tr:hover {
+    background-color: var(--brand-light-bgcolor);
+}
+
+td:first-child {
+    border-bottom-left-radius: var(--radius-small);
+}
+
+td:last-child {
+    border-bottom-right-radius: var(--radius-small);
+}

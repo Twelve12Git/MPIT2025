@@ -1,8 +1,15 @@
 :root {
-    --brand-color: #ff5a00;
-    --primary-color: #222;
+    --brand-color: hsl(21, 100%, 50%);
+    --brand-hover-color: hsl(21, 100%, 40%);
+    --primary-color: hsl(0, 0%, 13%);
+    --secondary-color: hsl(0, 0%, 85%);
 
-    --brand-bgcolor: #007acc;
-    --primary-bgcolor: #fff;
-    --secondary-bgcolor: #f5f7fa;
+    --brand-light-bgcolor: hsl(21, 100%, 90%);
+    --primary-bgcolor: hsl(0, 0%, 100%);
+    --secondary-bgcolor: hsl(21, 0%, 93%);
+    --contrast-bgcolor: hsl(0, 0%, 75%);
+
+    --radius-small: 0.5rem;
+    --redius-medium: 1rem;
+    --redius-large: 2rem;
 }

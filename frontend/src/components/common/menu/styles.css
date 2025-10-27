@@ -1,0 +1,13 @@
+
+
+.menu {
+    display: flex;
+}
+
+.wrapper {
+    display: flex;
+    flex-grow: 1;
+    justify-content: right;
+
+    font-size: 1.5rem;
+}
