@@ -30,9 +30,9 @@ export default function ExecutorsPage() {
 
     return (
         <div className='executorlist'>
-            <Dialog>
+            {/* <Dialog>
                 <ExecutorPanel/>
-            </Dialog>
+            </Dialog> */}
             <PageHeader primaryText='Активные' secondaryText='исполнители' />
             <table className='executors-table'>
                 <thead>
