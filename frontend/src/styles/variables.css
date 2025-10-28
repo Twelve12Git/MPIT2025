@@ -9,6 +9,8 @@
     --secondary-bgcolor: hsl(21, 0%, 93%);
     --contrast-bgcolor: hsl(0, 0%, 75%);
 
+    --dark-bgcolor: hsla(0, 0%, 0%, 0.7);
+
     --radius-small: 0.5rem;
     --redius-medium: 1rem;
     --redius-large: 2rem;

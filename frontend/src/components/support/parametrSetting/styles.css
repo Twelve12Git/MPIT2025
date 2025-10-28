@@ -1,0 +1,21 @@
+
+
+
+.wrapper {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: left;
+    align-content: left;
+}
+
+.parametrSettings-name {
+    margin-right: 1rem;
+}
+
+.parametrSettings-operator {
+    margin-right: 1rem;
+}
+
+.parametrSettings-valu {
+    margin-right: 1rem;
+}

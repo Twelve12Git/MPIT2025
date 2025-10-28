@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import './styles.css';
 import PageHeader from '../../support/pageHeader/PageHeader';
 import Executor from '../../../models/classes/Executor';
+import Dialog from '../../support/dialog/Dialog';
+import { ExecutorPanel } from '../../common/executorPanel/ExecutorPanle';
 
 export default function ExecutorsPage() {
     const [executors, setExecutors] = useState(Array<Executor>);
@@ -9,13 +11,13 @@ export default function ExecutorsPage() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            const fetchedUsers: Executor[] = [
+            const fetchedExecutor: Executor[] = [
                 new Executor(1, 'Иван Иванов', true, 'Средняя', 75 ),
                 new Executor(2, 'Петр Петров', false, 'Низкая', 82 ),
                 new Executor(3, 'Анна Сидорова', true, 'Высокая', 60 ),
                 new Executor(4, 'Мария Кузнецова', true, 'Средняя', 68 ),
             ];
-            setExecutors(fetchedUsers);
+            setExecutors(fetchedExecutor);
             setLoading(false);
         }, 1500);
 
@@ -23,8 +25,14 @@ export default function ExecutorsPage() {
     }, []);
 
 
+
+
+
     return (
         <div className='executorlist'>
+            <Dialog>
+                <ExecutorPanel/>
+            </Dialog>
             <PageHeader primaryText='Активные' secondaryText='исполнители' />
             <table className='executors-table'>
                 <thead>
