@@ -2,24 +2,22 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Устанавливаем системные зависимости
 RUN apt-get update && apt-get install -y \
-    curl \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install Python dependencies
+# Копируем зависимости
 COPY requirements.txt .
+
+# Устанавливаем Python зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Копируем весь проект
 COPY . .
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash app
-USER app
+# Создаем volume для хот-релоуда
+VOLUME /app
 
-# Expose port
-EXPOSE 8001
-
-# Run the worker service
+# Запускаем сервис
 CMD ["python", "main_worker.py"]

@@ -1,28 +1,71 @@
-from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Literal
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import computed_field, SecretStr, Field
+
+
+class PostgresSettings(BaseSettings):
+    USER: str
+    PASSWORD: SecretStr
+    DB: str
+    HOST: str
+    PORT: str 
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_prefix = "POSTGRES_",
+        extra="ignore"
+    )
+
+    @computed_field
+    @property
+    def ENGINE_URL(self) -> SecretStr:
+        return SecretStr(f"postgresql+asyncpg://{self.USER}:{self.PASSWORD.get_secret_value()}@{self.HOST}:{self.PORT}/{self.DB}")
+
+class RedisSettings(BaseSettings):
+    # USER: str
+    PASSWORD: SecretStr
+    DB: str
+    HOST: str
+    PORT: str 
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_prefix = "REDIS_",
+        extra="ignore"
+    )
+
+    @computed_field
+    @property
+    def ENGINE_URL(self) -> SecretStr:
+        return SecretStr(f"postgresql+asyncpg://{self.USER}:{self.PASSWORD.get_secret_value()}@{self.HOST}:{self.PORT}/{self.DB}")
+
+
+# class LogSettings(BaseSettings):
+#     ECHO: bool = Field(default=False)
+#     LEVEL_API: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(default="WARNING")
+#     PATH_API: str = Field(default="./logs")
+    
+#     model_config = SettingsConfigDict(
+#         env_file=".env",
+#         env_prefix = "LOG_",
+#         extra="ignore"
+#     )
 
 class Settings(BaseSettings):
-    app_name: str = "OrderService"
-    debug: bool = False
-    order_service_host: str = "0.0.0.0"
-    order_service_port: int = 8000
+    POSTGRES: PostgresSettings = Field(default_factory=PostgresSettings)
+    REDIS: RedisSettings = Field(default_factory=RedisSettings)
+    # LOG: LogSettings = Field(default_factory=LogSettings)
+    DEV: bool = Field(default=False)
 
-    worker_service_host: str = "0.0.0.0"
-    worker_service_port: int = 8001
-    
-    redis_host: str = "localhost"
-    redis_port: int = 6379
-    redis_db: int = 0
-    redis_password: Optional[str] = None
-    
-    @property
-    def redis_url(self) -> str:
-        if self.redis_password:
-            return f"redis://:{self.redis_password}@{self.redis_host}:{self.redis_port}/{self.redis_db}"
-        return f"redis://{self.redis_host}:{self.redis_port}/{self.redis_db}"
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    APP_HOST: str = "127.0.0.1"
+    WORKER_SERVICE_PORT: int = 8000
+    ORDER_SERVICE_PORT: int = 8000
 
-settings = Settings()
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".env"
+    )
+
+
+
+SETTINGS = Settings()

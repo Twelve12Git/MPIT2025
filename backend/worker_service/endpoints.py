@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
-from db.session import get_async_session
+from db.exceptions import EntityNotFound
+from db.sessions import get_async_session
 from db.worker.dal import WorkerDAL
-from .schemas import CreateWorker, UpdateWorker
-from entities.worker import Worker
+from worker_service.schemas import CreateWorker, UpdateWorker
+from entities.worker import Worker, WorkerParameterDescription
 
 worker_router = APIRouter(prefix="/workers", tags=["workers"])
 
@@ -18,11 +19,10 @@ async def create_worker(
     try:
         worker_dal = WorkerDAL(session)
         
-        # Конвертируем Pydantic модели в словари для DAL
         parameters_declaration = [
             {
-                "type": param.type,
-                "name": param.name
+                "type": param["type"],
+                "name": param["name"]
             }
             for param in body.parameters_declaration
         ]
@@ -32,7 +32,6 @@ async def create_worker(
             parameters_declaration=parameters_declaration
         )
         
-        # Конвертируем SQLAlchemy модель в Pydantic модель
         return Worker(
             id=worker.id,
             parameters_declaration=[
