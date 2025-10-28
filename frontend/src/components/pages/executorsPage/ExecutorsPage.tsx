@@ -37,6 +37,7 @@ export default function ExecutorsPage() {
             {
                 selectExecutor &&
                 <Dialog>
+                    {/* <ExecutorPanel executor={selectExecutor} handleClose={handleClose}/> */}
                     <ExecutorEditParametr executor={selectExecutor} handleClose={handleClose} />
                 </Dialog>
             }

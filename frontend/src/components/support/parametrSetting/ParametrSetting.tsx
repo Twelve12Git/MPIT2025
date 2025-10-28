@@ -1,10 +1,11 @@
+import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import './styles.css';
 
 
 
 type ParametrSettingProps = {
     name: string;
-    valueType: 'string' | 'number' | 'boolean';
+    valueType: ValueType;
 }
 
 

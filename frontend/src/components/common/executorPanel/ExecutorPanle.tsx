@@ -13,14 +13,14 @@ type ExecutorPanelProps = {
 
 export function ExecutorPanel({ executor, handleClose }: ExecutorPanelProps) {
     const [parametrs, setParametrs] = useState(Array<Parametr>);
-    useEffect(() => {
-        const fetchedParametr: Parametr[] = [
-            new Parametr(1, 'Сумма', 'number'),
-            new Parametr(2, 'Горячая', 'boolean'),
-            new Parametr(3, 'Отдел', 'string'),
-        ];
-        setParametrs(fetchedParametr);
-    }, []);
+    // useEffect(() => {
+    //     const fetchedParametr: Parametr[] = [
+    //         new Parametr(1, 'Сумма', 'number'),
+    //         new Parametr(2, 'Горячая', 'boolean'),
+    //         new Parametr(3, 'Отдел', 'string'),
+    //     ];
+    //     setParametrs(fetchedParametr);
+    // }, []);
 
     console.log(executor);
 

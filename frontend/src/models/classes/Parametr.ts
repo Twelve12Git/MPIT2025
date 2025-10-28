@@ -3,11 +3,13 @@ export type ValueType = "NUMBER" | "BOOLEAN";
 
 
 export class Parametr {
-    name: string;
     valueType: ValueType;
+    value: string;
+    name: string;
 
-    constructor(name: string, valueType: ValueType) {
-        this.valueType = valueType,
-        this.name = name
+    constructor(name: string, value: string, valueType: ValueType) {
+        this.valueType = valueType;
+        this.value = value;
+        this.name = name;
     }
 }
