@@ -4,8 +4,8 @@
 .wrapper {
     margin-bottom: 1rem;
     display: flex;
-    justify-content: left;
-    align-content: left;
+    justify-self: left;
+    align-self: left;
 }
 
 .parametrSettings-name {
@@ -16,6 +16,6 @@
     margin-right: 1rem;
 }
 
-.parametrSettings-valu {
+.parametrSettings-value {
     margin-right: 1rem;
 }

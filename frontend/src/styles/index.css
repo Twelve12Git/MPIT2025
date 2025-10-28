@@ -60,6 +60,9 @@ input[type="text"]:focus {
     box-shadow: 0 0 5px #a3c6f7;
 }
 
+label {
+    font-size: 1rem;
+}
 table {
     width: 100%;
 
@@ -71,11 +74,14 @@ td {
     padding: 0.75rem;
     border-bottom: 1px solid var(--primary-bgcolor);
     text-align: left;
+    cursor: pointer;
 }
 
 th {
     background-color: var(--contrast-bgcolor);
     color: var(--primary-color);
+
+    cursor: default;
 }
 
 th:first-child {

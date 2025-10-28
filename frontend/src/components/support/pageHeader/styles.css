@@ -16,5 +16,7 @@
 }
 
 .secondary-text {
+    margin-right: 0.75rem;
+    
     color: var(--brand-color);
 }

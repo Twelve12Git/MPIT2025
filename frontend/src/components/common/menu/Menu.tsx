@@ -22,7 +22,7 @@ export default function Menu() {
         <div className='menu'>
             <Logo/>
             <div className='wrapper'>
-                <button onClick={handleParametrsPage}>Конструктор параметров</button>
+                {/* <button onClick={handleParametrsPage}>Конструктор параметров</button> */}
                 <button onClick={handleExecutorsPage}>Список исполнителей</button>
                 <button onClick={handleDashboardPage}>Дашбоард</button>
             </div>
