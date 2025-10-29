@@ -14,11 +14,10 @@ for (let i = 0; i < 10; i++) {
 }
 
 const ordersTime = [
-    { name: "500", time: 0.7 },
-    { name: "1000", time: 1.1 },
-    { name: "5000", time: 1.32 },
-    { name: "10000", time: 3.43 },
-    { name: "50000", time: 12.1 },
+    { name: "500", time: 0.34 },
+    { name: "1000", time: 0.71 },
+    { name: "5000", time: 2.69 },
+    { name: "10000", time: 6.53 },
 ];
 
 
@@ -54,7 +53,7 @@ export function DashboardPage() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar type="monotone" dataKey="tasks" fill="#ffb892ff">
+                            <Bar type="monotone" dataKey="tasks" fill="#ffb892ff" animationDuration={10000}> 
                                 <LabelList dataKey="tasks" position="top" />
                             </Bar>
                         </BarChart>
@@ -73,7 +72,7 @@ export function DashboardPage() {
                         <YAxis tickFormatter={tickFormatter} />
                         <Tooltip />
                         <Legend />
-                        <Line type='monotone' dataKey='time' stroke='#ff5900' strokeWidth={2} animationDuration={3000} />
+                        <Line type='monotone' dataKey='time' stroke='#ff5900' strokeWidth={2} animationDuration={10000} />
                     </LineChart>
                 </div>
             </div>

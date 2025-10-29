@@ -13,26 +13,17 @@ export default function ExecutorsPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // const fetchedExecutor: Executor[] = [
-        //     new Executor(1, 'Иван Иванов', 52),
-        //     new Executor(2, 'Петр Петров', 51),
-        //     new Executor(3, 'Анна Сидорова', 48),
-        //     new Executor(4, 'Мария Кузнецова', 50),
-        // ];
+        const fetchedExecutor: Executor[] = [
+            new Executor(1, 'Иван Иванов', 52),
+            new Executor(2, 'Петр Петров', 51),
+            new Executor(3, 'Анна Сидорова', 48),
+            new Executor(4, 'Мария Кузнецова', 50),
+        ];
 
-        const fetchData = async () => {
-            try {
-                const response: AxiosResponse<any, any, {}> = await axios.get(Environment.VITE_WORKERS_LIST);
-                setExecutors(response.data);
-            } catch (error) {
-                console.error("Ошибка при загрузке исполнителей:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        
 
 
-        fetchData();
+        setExecutors(fetchedExecutor);
         setLoading(false);
     }, []);
 
