@@ -1,4 +1,5 @@
-import type { PageType } from "../pageType";
+import type { PageType } from "./pageType";
+
 
 
 

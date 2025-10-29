@@ -3,8 +3,9 @@ import './styles.css';
 import PageHeader from '../../support/pageHeader/PageHeader';
 import Executor from '../../../models/classes/Executor';
 import Dialog from '../../support/dialog/Dialog';
-import { ExecutorPanel } from '../../common/executorPanel/ExecutorPanle';
 import { ExecutorEditParametr } from '../../common/executorEditParametr/ExecuterEditParametr';
+import Environment from '../../../utils/Environment';
+import axios, { type AxiosResponse } from 'axios';
 
 export default function ExecutorsPage() {
     const [selectExecutor, setSelectExecutor] = useState<Executor | null>(null);
@@ -12,13 +13,26 @@ export default function ExecutorsPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchedExecutor: Executor[] = [
-            new Executor(1, 'Иван Иванов', true, 50, 75),
-            new Executor(2, 'Петр Петров', false, 51, 82),
-            new Executor(3, 'Анна Сидорова', true, 48, 60),
-            new Executor(4, 'Мария Кузнецова', true, 50, 68),
-        ];
-        setExecutors(fetchedExecutor);
+        // const fetchedExecutor: Executor[] = [
+        //     new Executor(1, 'Иван Иванов', 52),
+        //     new Executor(2, 'Петр Петров', 51),
+        //     new Executor(3, 'Анна Сидорова', 48),
+        //     new Executor(4, 'Мария Кузнецова', 50),
+        // ];
+
+        const fetchData = async () => {
+            try {
+                const response: AxiosResponse<any, any, {}> = await axios.get(Environment.VITE_WORKERS_LIST);
+                setExecutors(response.data);
+            } catch (error) {
+                console.error("Ошибка при загрузке исполнителей:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+
+        fetchData();
         setLoading(false);
     }, []);
 
@@ -47,9 +61,7 @@ export default function ExecutorsPage() {
                 <thead>
                     <tr>
                         <th>Имя</th>
-                        <th>Активен</th>
                         <th>Кол-во задач</th>
-                        <th>Вес</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,10 +72,8 @@ export default function ExecutorsPage() {
                     ) : (
                         executors.map(executor => (
                             <tr key={executor.id} onClick={() => handleExecutorParametrs(executor)}>
-                                <td>{executor.name}</td>
-                                <td>{executor.active ? 'Да' : 'Нет'}</td>
+                                <td>{executor.id}</td>
                                 <td>{executor.countTask}</td>
-                                <td>{executor.weight}</td>
                             </tr>
                         ))
                     )}

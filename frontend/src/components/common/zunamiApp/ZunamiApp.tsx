@@ -1,5 +1,6 @@
 import type { ComponentType, JSX } from 'react';
 import './zunamiApp.css';
+import TestsPage from '../../pages/testPage/TestsPage';
 import ParametrsPage from '../../pages/parametrsPage/ParametrsPage';
 import ExecutorsPage from '../../pages/executorsPage/ExecutorsPage';
 import { DashboardPage } from '../../pages/dashboardPage/DashboardPage';
@@ -8,6 +9,7 @@ import Menu from '../menu/Menu';
 
 
 const pageMap: Record<string, ComponentType> = {
+    tests: TestsPage,
     parametrs: ParametrsPage,
     executors: ExecutorsPage,
     dashboard: DashboardPage,

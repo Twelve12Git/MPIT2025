@@ -1,7 +1,8 @@
-
-
 .menu {
+    padding-bottom: 1rem;
     display: flex;
+
+    border-bottom: 2px solid var(--secondary-bgcolor);
 }
 
 .wrapper {
@@ -10,4 +11,10 @@
     justify-content: right;
 
     font-size: 1.5rem;
+}
+
+.menu-button {
+    height: inherit;
+
+    align-self: center;
 }

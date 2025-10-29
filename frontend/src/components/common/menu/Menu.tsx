@@ -7,7 +7,12 @@ import useStoreActivePages from '../../../stores/activePage/useSoreActivePage';
 export default function Menu() {
     const { setActivePage, removeActivePage } = useStoreActivePages();
 
-     const handleParametrsPage = async () => {
+
+    const handleTestsPage = async () => {
+        setActivePage('tests');
+    }
+
+    const handleParametrsPage = async () => {
         setActivePage('parametrs');
     }
     const handleExecutorsPage = async () => {
@@ -22,9 +27,10 @@ export default function Menu() {
         <div className='menu'>
             <Logo/>
             <div className='wrapper'>
-                <button onClick={handleParametrsPage}>Конструктор параметров</button>
-                <button onClick={handleExecutorsPage}>Список исполнителей</button>
-                <button onClick={handleDashboardPage}>Дашбоард</button>
+                <button className='menu-button' onClick={handleTestsPage}>Тесты</button>
+                <button className='menu-button' onClick={handleParametrsPage}>Конструктор параметров</button>
+                <button className='menu-button' onClick={handleExecutorsPage}>Список исполнителей</button>
+                <button className='menu-button' onClick={handleDashboardPage}>Дашбоард</button>
             </div>
         </div>
     )

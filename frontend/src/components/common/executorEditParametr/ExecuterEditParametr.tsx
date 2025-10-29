@@ -1,17 +1,19 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { Parametr, type ValueType } from '../../../models/classes/Parametr';
+import { type ValueType } from '../../../models/classes/Parametr';
 import PageHeader from '../../support/pageHeader/PageHeader';
 import './styles.css';
 import type Executor from '../../../models/classes/Executor';
-import Select from 'react-select';
-import { PararametrsData } from '../../../models/classes/ParametrsData';
-import axios, { Axios } from 'axios';
+import Select, { type SingleValue } from 'react-select';
+import { Worker, type Declaration } from '../../../models/classes/Worker';
+import Environment from '../../../utils/Environment';
 
 
 type ExecutorPanelProps = {
     executor: Executor;
     handleClose: () => void;
 }
+
+type SelectOptionType = { value: ValueType, label: string };
 
 const options: { value: ValueType, label: string }[] = [
     { value: 'NUMBER', label: 'Цифры' },
@@ -20,8 +22,8 @@ const options: { value: ValueType, label: string }[] = [
 
 
 export function ExecutorEditParametr({ executor, handleClose }: ExecutorPanelProps) {
-    const [parametrs, setParametrs] = useState<Parametr[]>(new Array<Parametr>());
-    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [parametrs, setParametrs] = useState<Declaration[]>([]);
+     const [selectedOption, setSelectedOption] = useState<SelectOptionType | null>(options[0]);
     const [name, setName] = useState("");
     const [condition, setCondition] = useState("");
 
@@ -32,26 +34,36 @@ export function ExecutorEditParametr({ executor, handleClose }: ExecutorPanelPro
     const handleCondition = (e: ChangeEvent<HTMLInputElement>) => {
         setCondition(e.target.value);
     }
-
+    
+    const handleSelectChange = (newValue: SingleValue<SelectOptionType>) => {
+        setSelectedOption(newValue);
+    }
 
     const handleAddParametr = (e: FormEvent) => {
         e.preventDefault();
-        if (!name.trim()) return;
-        const newParametr = new Parametr(name, selectedOption.value);
+        if (!name.trim() || !selectedOption) {
+            alert("Заполните название и выберите тип параметра");
+            return;
+        }
+        const newParametr: Declaration = {
+            type: selectedOption.value,
+            name: name
+        }
         setParametrs([...parametrs, newParametr]);
         setName("");
     }
 
     const handleSaveData = (e: FormEvent) => {
         e.preventDefault();
-        if (parametrs.length == 0) {
+        if (parametrs.length === 0) {
             alert("Добавьте хотя бы один параметр");
+            return;
         }
-        const data: PararametrsData = new PararametrsData(parametrs, condition);
+        const data: Worker = new Worker(parametrs, condition);
         alert(JSON.stringify(data))
-        fetch("http://localhost:8080/workers", {
+        fetch(Environment.VITE_WORKERS_UPDATE, {
             body: JSON.stringify(data),
-            method: 'POST'
+            method: 'PUT'
         })
     }
 
@@ -83,7 +95,7 @@ export function ExecutorEditParametr({ executor, handleClose }: ExecutorPanelPro
             <div className='executor-wrapper-param'>
                 {parametrs.map(parametr => (
                     <div className='executor-parametr'>
-                        {parametr.name} : {parametr.valueType}
+                        {parametr.name} : {parametr.type}
                     </div>
                 ))}
             </div>
